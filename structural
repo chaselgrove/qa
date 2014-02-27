@@ -1,4 +1,19 @@
-#!/bin/sh
+#!/bin/sh -e
+
+progname=`basename $0`
+
+if [ $# -ne 1 ]
+then
+    echo
+    echo "usage: $progname <directory>"
+    echo
+    echo "Runs structural QA in the given directory.  anat.nii.gz must exist "
+    echo "in the directory."
+    echo
+    exit 1
+fi
+
+cd "$1"
 
 fslreorient2std anat anat_r
 
@@ -16,5 +31,7 @@ fslstats anat_r -k gm -R -r -m -s -v > gm.stats
 
 fslmaths anat_brain_seg -thr 3 -uthr 3 -bin wm
 fslstats anat_r -k wm -R -r -m -s -v > wm.stats
+
+exit 0
 
 # eof
